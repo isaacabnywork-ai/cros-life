@@ -49,29 +49,14 @@ export default function Navbar() {
           {/* Brand Logo */}
           <Link
             to="/"
-            className="flex items-center gap-3 group focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-amber rounded"
+            className="flex items-center gap-3 group focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-amber rounded py-1"
             aria-label="CrossLife Homepage"
           >
-            <div className="w-8 h-8 flex items-center justify-center shrink-0">
-              <svg viewBox="0 0 32 32" className="w-8 h-8" fill="none">
-                <rect x="13" y="2" width="6" height="28" rx="2" fill="url(#navCrossGrad)" />
-                <rect x="4" y="9" width="24" height="6" rx="2" fill="url(#navCrossGrad)" />
-                <defs>
-                  <linearGradient id="navCrossGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" stopColor="#F59E0B" />
-                    <stop offset="100%" stopColor="#1E4B82" />
-                  </linearGradient>
-                </defs>
-              </svg>
-            </div>
-            <div className="flex flex-col">
-              <span className={`font-display font-bold text-xl tracking-tight ${logoTextColor}`}>
-                Cross<span className="text-brand-amber">Life</span>
-              </span>
-              <span className="text-[9px] tracking-[0.2em] uppercase font-semibold text-brand-subtle">
-                One Life
-              </span>
-            </div>
+            <img
+              src="/images/crosslife-logo.webp"
+              alt="CrossLife"
+              className="h-9 sm:h-10 w-auto object-contain"
+            />
           </Link>
 
           {/* Desktop Navigation */}

@@ -18,14 +18,13 @@ export default function MobileMenu({ isOpen, onClose, navLinks, onRegisterClick 
       <div className="fixed inset-y-0 right-0 max-w-xs w-full bg-white shadow-panel flex flex-col z-10 animate-in slide-in-from-right duration-300">
         {/* Drawer Header */}
         <div className="p-6 border-b border-brand-border flex items-center justify-between">
-          <div className="flex flex-col">
-            <span className="font-display font-bold text-lg text-brand-navy tracking-tight">
-              Cross<span className="text-brand-amber">Life</span>
-            </span>
-            <span className="text-[10px] tracking-widest uppercase font-semibold text-brand-subtle">
-              14 - 16 Sept 2027
-            </span>
-          </div>
+          <Link to="/" onClick={onClose} className="block">
+            <img
+              src="/images/crosslife-logo.webp"
+              alt="CrossLife"
+              className="h-8 w-auto object-contain"
+            />
+          </Link>
           <button
             type="button"
             onClick={onClose}

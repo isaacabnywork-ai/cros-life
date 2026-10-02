@@ -46,19 +46,11 @@ export default function RegisterModal() {
           <div className="space-y-1">
             {/* Logo and Event Identity */}
             <div className="flex items-center gap-2">
-              <svg viewBox="0 0 32 32" className="w-5 h-5 shrink-0" fill="none">
-                <rect x="13" y="2" width="6" height="28" rx="2" fill="url(#modalCrossGrad)" />
-                <rect x="4" y="9" width="24" height="6" rx="2" fill="url(#modalCrossGrad)" />
-                <defs>
-                  <linearGradient id="modalCrossGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" stopColor="#F59E0B" />
-                    <stop offset="100%" stopColor="#1E4B82" />
-                  </linearGradient>
-                </defs>
-              </svg>
-              <span className="font-display font-bold text-lg text-brand-navy tracking-tight">
-                Cross<span className="text-brand-amber">Life</span>
-              </span>
+              <img
+                src="/images/crosslife-logo.webp"
+                alt="CrossLife"
+                className="h-7 w-auto object-contain"
+              />
             </div>
             <h2 id="modal-title" className="font-display font-semibold text-xl text-brand-navy">
               Event Info and Rates

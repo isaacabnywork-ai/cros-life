@@ -25,22 +25,12 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 pb-16 border-b border-brand-border-navy">
           {/* Brand & Organiser Column */}
           <div className="lg:col-span-5 space-y-6">
-            <Link to="/" className="inline-flex items-center gap-3">
-              <div className="w-8 h-8 flex items-center justify-center shrink-0">
-                <svg viewBox="0 0 32 32" className="w-8 h-8" fill="none">
-                  <rect x="13" y="2" width="6" height="28" rx="2" fill="url(#footerCrossGrad)" />
-                  <rect x="4" y="9" width="24" height="6" rx="2" fill="url(#footerCrossGrad)" />
-                  <defs>
-                    <linearGradient id="footerCrossGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                      <stop offset="0%" stopColor="#F59E0B" />
-                      <stop offset="100%" stopColor="#1E4B82" />
-                    </linearGradient>
-                  </defs>
-                </svg>
-              </div>
-              <span className="font-display font-bold text-2xl tracking-tight text-white">
-                Cross<span className="text-brand-amber">Life</span>
-              </span>
+            <Link to="/" className="inline-flex items-center">
+              <img
+                src="/images/crosslife-logo.webp"
+                alt="CrossLife"
+                className="h-10 sm:h-11 w-auto object-contain"
+              />
             </Link>
 
             <p className="text-sm text-slate-300 max-w-sm leading-relaxed">
