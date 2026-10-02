@@ -47,8 +47,24 @@ export default function Home() {
       {/* 1.a. HERO SECTION                                                         */}
       {/* ========================================================================= */}
       <section className="relative min-h-[92vh] flex flex-col justify-between bg-brand-navy pt-28 pb-16 overflow-hidden">
+        {/* Hero Background Image with Editorial Scrim for High-Contrast Readability */}
+        <div className="absolute inset-0 z-0 pointer-events-none">
+          <img
+            src="/hero-bg.png"
+            onError={(e) => {
+              // Fallback to remote CDN if local file is missing
+              e.currentTarget.src = 'https://crosslife.in/wp-content/uploads/2024/12/Homepage-Blur-e1735303144723.png'
+            }}
+            alt=""
+            aria-hidden="true"
+            className="w-full h-full object-cover object-center opacity-45 mix-blend-luminosity"
+          />
+          {/* Multi-stage gradient scrim ensuring WCAG AA contrast for text */}
+          <div className="absolute inset-0 bg-gradient-to-b from-brand-navy/90 via-brand-navy/75 to-brand-navy" />
+        </div>
+
         {/* Subtle geometric hairline watermarks echoing the brand cross */}
-        <div className="absolute inset-0 pointer-events-none opacity-10">
+        <div className="absolute inset-0 pointer-events-none opacity-10 z-0">
           <div className="absolute top-1/4 right-1/4 w-[600px] h-[600px] border border-brand-amber/30 rounded-full" />
           <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
             <line x1="50%" y1="0" x2="50%" y2="100%" stroke="#1E4B82" strokeWidth="1" strokeDasharray="4 4" />
