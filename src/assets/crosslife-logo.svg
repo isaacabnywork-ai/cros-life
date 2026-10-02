@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 56" fill="none">
+  <defs>
+    <linearGradient id="crossGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#F59E0B" />
+      <stop offset="100%" stop-color="#1E4B82" />
+    </linearGradient>
+  </defs>
+  <!-- Geometric Cross Motif -->
+  <g transform="translate(6, 6)">
+    <rect x="18" y="2" width="6" height="40" rx="2" fill="url(#crossGrad)" />
+    <rect x="6" y="14" width="30" height="6" rx="2" fill="url(#crossGrad)" />
+  </g>
+  <!-- Wordmark -->
+  <text x="58" y="34" font-family="'Sora', sans-serif" font-weight="700" font-size="24" letter-spacing="-0.02em" fill="currentColor">
+    Cross<tspan fill="#F59E0B">Life</tspan>
+  </text>
+  <text x="59" y="47" font-family="'Raleway', sans-serif" font-weight="600" font-size="8.5" letter-spacing="0.22em" fill="#64748B">
+    ONE LIFE FOR CHRIST
+  </text>
+</svg>

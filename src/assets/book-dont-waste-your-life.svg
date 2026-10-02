@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 340" fill="none">
+  <!-- Book spine shadow and cover base -->
+  <rect width="240" height="340" rx="4" fill="#0B2545" />
+  <rect x="0" y="0" width="16" height="340" fill="#06172C" />
+  <line x1="16" y1="0" x2="16" y2="340" stroke="#1B355A" stroke-width="1" />
+  
+  <!-- Subtle decorative framing (1px line, editorial) -->
+  <rect x="28" y="24" width="184" height="292" stroke="#1E4B82" stroke-width="1" fill="none" />
+  
+  <text x="120" y="70" font-family="'Sora', sans-serif" font-weight="600" font-size="10" letter-spacing="0.2em" fill="#F59E0B" text-anchor="middle">
+    CONFERENCE GIFT
+  </text>
+  
+  <!-- Title -->
+  <text x="120" y="145" font-family="'Sora', sans-serif" font-weight="800" font-size="24" fill="#FAFBFD" text-anchor="middle" letter-spacing="-0.02em">
+    DON'T
+  </text>
+  <text x="120" y="175" font-family="'Sora', sans-serif" font-weight="800" font-size="24" fill="#FAFBFD" text-anchor="middle" letter-spacing="-0.02em">
+    WASTE
+  </text>
+  <text x="120" y="205" font-family="'Sora', sans-serif" font-weight="800" font-size="24" fill="#FAFBFD" text-anchor="middle" letter-spacing="-0.02em">
+    YOUR LIFE
+  </text>
+  
+  <!-- Accent rule -->
+  <line x1="90" y1="225" x2="150" y2="225" stroke="#F59E0B" stroke-width="2" />
+  
+  <text x="120" y="275" font-family="'Raleway', sans-serif" font-weight="600" font-size="12" letter-spacing="0.1em" fill="#EEF3FA" text-anchor="middle">
+    JOHN PIPER
+  </text>
+  
+  <text x="120" y="295" font-family="'Raleway', sans-serif" font-weight="400" font-size="9" letter-spacing="0.08em" fill="#64748B" text-anchor="middle">
+    Free for Every Participant
+  </text>
+</svg>
