@@ -50,10 +50,10 @@ export default function Home() {
         {/* Hero Background Image with Editorial Scrim for High-Contrast Readability */}
         <div className="absolute inset-0 z-0 pointer-events-none">
           <img
-            src="/hero-bg.png"
+            src="/hero-bg.jpg"
             onError={(e) => {
               // Fallback to remote CDN if local file is missing
-              e.currentTarget.src = 'https://crosslife.in/wp-content/uploads/2024/12/Homepage-Blur-e1735303144723.png'
+              e.currentTarget.src = 'https://img.magnific.com/free-photo/waiting-room-with-monitors_1232-1390.jpg?semt=ais_hybrid&w=740&q=80'
             }}
             alt=""
             aria-hidden="true"
