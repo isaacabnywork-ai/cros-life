@@ -52,19 +52,34 @@ export default function Button({
     variantClasses[variant] || variantClasses.primary
   } ${className}`
 
-  if (to) {
+  const targetUrl = to || href
+
+  if (targetUrl) {
+    const isExternal =
+      typeof targetUrl === 'string' &&
+      (targetUrl.startsWith('http://') ||
+        targetUrl.startsWith('https://') ||
+        targetUrl.startsWith('mailto:') ||
+        targetUrl.startsWith('tel:'))
+
+    if (isExternal) {
+      return (
+        <a
+          href={targetUrl}
+          className={combinedClasses}
+          target={props.target || (targetUrl.startsWith('http') ? '_blank' : undefined)}
+          rel={props.rel || (targetUrl.startsWith('http') ? 'noopener noreferrer' : undefined)}
+          {...props}
+        >
+          {children}
+        </a>
+      )
+    }
+
     return (
-      <Link to={to} className={combinedClasses} {...props}>
+      <Link to={targetUrl} className={combinedClasses} {...props}>
         {children}
       </Link>
-    )
-  }
-
-  if (href) {
-    return (
-      <a href={href} className={combinedClasses} target="_blank" rel="noopener noreferrer" {...props}>
-        {children}
-      </a>
     )
   }
 

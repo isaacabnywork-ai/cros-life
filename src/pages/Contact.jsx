@@ -7,9 +7,17 @@ import SectionHeading from '../components/ui/SectionHeading'
 import Reveal from '../components/ui/Reveal'
 import Button from '../components/ui/Button'
 
+import { useCms } from '../cms/context/CmsContext'
+
 export default function Contact() {
+  const { settings } = useCms()
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const phones = settings?.contacts?.phones || SITE_CONFIG.contacts.phones
+  const email = settings?.contacts?.email || SITE_CONFIG.contacts.email
+  const venue = settings?.contacts?.venue || SITE_CONFIG.venue
+  const organiser = settings?.event?.organiser || SITE_CONFIG.organiser
 
   const {
     register,
@@ -22,30 +30,6 @@ export default function Contact() {
 
   const onSubmit = async (data) => {
     setIsSubmitting(true)
-
-    /*
-     * ------------------------------------------------------------------------
-     * FORM SUBMISSION ENDPOINT PLACEHOLDER
-     * Replace the block below with your actual form endpoint submission:
-     * e.g., Formspree, EmailJS, Resend, or your custom API route.
-     * Example:
-     *   await fetch(SITE_CONFIG.FORM_ENDPOINT, {
-     *     method: 'POST',
-     *     headers: { 'Content-Type': 'application/json' },
-     *     body: JSON.stringify(data),
-     *   })
-     * ------------------------------------------------------------------------
-     */
-
-    /*
-     * ------------------------------------------------------------------------
-     * GOOGLE reCAPTCHA PLACEHOLDER
-     * Insert reCAPTCHA v2 / v3 verification here before dispatching:
-     * e.g. const token = await executeRecaptcha('contact_form')
-     * ------------------------------------------------------------------------
-     */
-
-    // Simulated graceful API latency for demonstration
     setTimeout(() => {
       setIsSubmitting(false)
       setIsSubmitted(true)
@@ -99,7 +83,7 @@ export default function Contact() {
                       Call Us
                     </span>
                     <div className="mt-1 space-y-1">
-                      {SITE_CONFIG.contacts.phones.map((phone) => (
+                      {phones.map((phone) => (
                         <a
                           key={phone.value}
                           href={`tel:${phone.value}`}
@@ -122,10 +106,10 @@ export default function Contact() {
                       Email Us
                     </span>
                     <a
-                      href={`mailto:${SITE_CONFIG.contacts.email}`}
+                      href={`mailto:${email}`}
                       className="block text-sm sm:text-base hover:text-brand-amber transition-colors mt-1 font-mono"
                     >
-                      {SITE_CONFIG.contacts.email}
+                      {email}
                     </a>
                   </div>
                 </div>
@@ -140,10 +124,10 @@ export default function Contact() {
                       Venue
                     </span>
                     <p className="text-sm font-medium mt-1">
-                      {SITE_CONFIG.venue.name}
+                      {venue.name}
                     </p>
                     <p className="text-xs text-blue-200">
-                      {SITE_CONFIG.venue.city}, {SITE_CONFIG.venue.state}
+                      {venue.city}, {venue.state}
                     </p>
                   </div>
                 </div>
@@ -151,7 +135,7 @@ export default function Contact() {
             </div>
 
             <div className="pt-8 border-t border-white/20 text-xs text-blue-100">
-              CrossLife is organised under the ministry of {SITE_CONFIG.organiser}.
+              CrossLife is organised under the ministry of {organiser}.
             </div>
           </div>
 

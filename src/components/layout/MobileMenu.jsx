@@ -1,13 +1,43 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { X, ArrowRight } from 'lucide-react'
 import { SITE_CONFIG } from '../../config/site'
+import { useCms } from '../../cms/context/CmsContext'
+import UniversalLink from '../ui/UniversalLink'
 
 export default function MobileMenu({ isOpen, onClose, navLinks, onRegisterClick }) {
+  const { settings } = useCms()
+
+  const venueName = settings?.contacts?.venue?.name || SITE_CONFIG.venue.name
+  const venueCity = settings?.contacts?.venue?.city || SITE_CONFIG.venue.city
+  const venueState = settings?.contacts?.venue?.state || SITE_CONFIG.venue.state
+  const email = settings?.contacts?.email || SITE_CONFIG.contacts.email
+  const logoUrl = settings?.logo_url || '/images/crosslife-logo.webp'
+
+  // Close on Escape key and prevent background scroll
+  useEffect(() => {
+    if (!isOpen) return
+
+    const originalOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        onClose()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => {
+      document.body.style.overflow = originalOverflow
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [isOpen, onClose])
+
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 z-50 md:hidden" role="dialog" aria-modal="true" aria-label="Mobile Menu">
+    <div className="fixed inset-0 z-50 md:hidden" role="dialog" aria-modal="true" aria-label="Mobile Navigation Menu">
       {/* Dim backdrop */}
       <div
         className="fixed inset-0 bg-brand-navy/60 backdrop-blur-sm transition-opacity"
@@ -20,7 +50,7 @@ export default function MobileMenu({ isOpen, onClose, navLinks, onRegisterClick 
         <div className="p-6 border-b border-brand-border flex items-center justify-between">
           <Link to="/" onClick={onClose} className="block">
             <img
-              src="/images/crosslife-logo.webp"
+              src={logoUrl}
               alt="CrossLife"
               className="h-8 w-auto object-contain"
             />
@@ -50,28 +80,28 @@ export default function MobileMenu({ isOpen, onClose, navLinks, onRegisterClick 
                     </div>
                     <div className="space-y-2 pl-2">
                       {item.items.map((subItem) => (
-                        <Link
+                        <UniversalLink
                           key={subItem.label}
                           to={subItem.href}
                           onClick={onClose}
                           className="block text-sm font-medium text-brand-text hover:text-brand-blue"
                         >
                           {subItem.label}
-                        </Link>
+                        </UniversalLink>
                       ))}
                     </div>
                   </div>
                 )
               }
               return (
-                <Link
+                <UniversalLink
                   key={item.label}
                   to={item.href}
                   onClick={onClose}
                   className="block text-base font-medium text-brand-text hover:text-brand-blue"
                 >
                   {item.label}
-                </Link>
+                </UniversalLink>
               )
             })}
           </div>
@@ -80,7 +110,7 @@ export default function MobileMenu({ isOpen, onClose, navLinks, onRegisterClick 
             <button
               type="button"
               onClick={onRegisterClick}
-              className="w-full flex items-center justify-center gap-2 bg-brand-navy hover:bg-brand-blue text-white py-3.5 px-4 rounded-btn font-semibold text-sm transition-colors"
+              className="w-full flex items-center justify-center gap-2 bg-brand-navy hover:bg-brand-blue text-white py-3.5 px-4 rounded-btn font-semibold text-sm transition-colors shadow-editorial"
             >
               <span>Register Now</span>
               <ArrowRight className="w-4 h-4" strokeWidth={1.75} />
@@ -90,9 +120,9 @@ export default function MobileMenu({ isOpen, onClose, navLinks, onRegisterClick 
 
         {/* Drawer Footer */}
         <div className="p-6 bg-brand-ice/50 border-t border-brand-border text-xs text-brand-muted">
-          <p className="font-semibold text-brand-text">{SITE_CONFIG.venue.name}</p>
-          <p>{SITE_CONFIG.venue.city}, {SITE_CONFIG.venue.state}</p>
-          <p className="mt-2 text-[11px] text-brand-subtle">{SITE_CONFIG.contacts.email}</p>
+          <p className="font-semibold text-brand-text">{venueName}</p>
+          <p>{venueCity}, {venueState}</p>
+          <p className="mt-2 text-[11px] text-brand-subtle">{email}</p>
         </div>
       </div>
     </div>

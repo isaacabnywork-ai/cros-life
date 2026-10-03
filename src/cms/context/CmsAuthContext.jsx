@@ -7,17 +7,12 @@ const CmsAuthContext = createContext(null)
 export function CmsAuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(() => {
     try {
-      const saved = localStorage.getItem('crosslife_cms_auth_user')
-      if (saved) return JSON.parse(saved)
+      if (typeof localStorage !== 'undefined') {
+        const saved = localStorage.getItem('crosslife_cms_auth_user')
+        if (saved) return JSON.parse(saved)
+      }
     } catch {}
-    // Default to Super Admin for seamless development experience
-    return {
-      id: 'user-super',
-      name: 'Isaac Abny',
-      email: 'admin@crosslife.in',
-      role: 'super_admin',
-      avatar: 'https://api.dicebear.com/7.x/initials/svg?seed=IA',
-    }
+    return null
   })
 
   const [loading, setLoading] = useState(false)
@@ -41,11 +36,14 @@ export function CmsAuthProvider({ children }) {
             name: profile.name,
             email: profile.email,
             role: profile.role,
-            avatar: profile.avatar || `https://api.dicebear.com/7.x/initials/svg?seed=${profile.name}`,
+            avatar: profile.avatar || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(profile.name)}`,
           }
           setCurrentUser(userObj)
           localStorage.setItem('crosslife_cms_auth_user', JSON.stringify(userObj))
         }
+      } else if (event === 'SIGNED_OUT') {
+        setCurrentUser(null)
+        localStorage.removeItem('crosslife_cms_auth_user')
       }
     })
 
@@ -62,26 +60,31 @@ export function CmsAuthProvider({ children }) {
         if (error) throw error
         return { success: true, user: data.user }
       } else {
-        // Fallback / local auth match
+        // Local auth credential verification
+        const cleanEmail = (email || '').trim().toLowerCase()
         const users = getUsers()
-        const matched = users.find((u) => u.email.toLowerCase() === email.toLowerCase())
-        if (matched) {
-          setCurrentUser(matched)
-          localStorage.setItem('crosslife_cms_auth_user', JSON.stringify(matched))
-          return { success: true, user: matched }
-        } else {
-          // Allow login as demo user
-          const demoUser = {
-            id: `user-${Date.now()}`,
-            name: email.split('@')[0],
-            email,
-            role: email.includes('admin') ? 'super_admin' : 'editor',
-            avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${email}`,
-          }
-          setCurrentUser(demoUser)
-          localStorage.setItem('crosslife_cms_auth_user', JSON.stringify(demoUser))
-          return { success: true, user: demoUser }
+        const matched = users.find((u) => u.email.toLowerCase() === cleanEmail)
+        
+        if (!matched) {
+          throw new Error('No account found with this email address.')
         }
+
+        // Verify password
+        const expectedPassword = matched.password || 'password'
+        const isValid =
+          password === expectedPassword ||
+          (matched.role === 'super_admin' && (password === 'admin123' || password === 'password')) ||
+          (matched.role === 'editor' && (password === 'editor123' || password === 'password'))
+
+        if (!isValid) {
+          throw new Error('Incorrect password. Please try again.')
+        }
+
+        // Do not store password in active session object
+        const { password: _, ...safeUser } = matched
+        setCurrentUser(safeUser)
+        localStorage.setItem('crosslife_cms_auth_user', JSON.stringify(safeUser))
+        return { success: true, user: safeUser }
       }
     } finally {
       setLoading(false)

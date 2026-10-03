@@ -17,11 +17,12 @@ export default function CmsDynamicPage({ fixedSlug = null }) {
   // 1. Check Redirects
   useEffect(() => {
     const matched = cmsStore.matchRedirect(location.pathname)
-    if (matched) {
-      if (matched.target_url.startsWith('http')) {
-        window.location.href = matched.target_url
-      } else {
-        navigate(matched.target_url, { replace: true })
+    if (matched && matched.target_url) {
+      const target = matched.target_url.trim()
+      if (target.startsWith('https://') || target.startsWith('http://')) {
+        window.location.href = target
+      } else if (target.startsWith('/') || target.startsWith('#')) {
+        navigate(target, { replace: true })
       }
     }
   }, [location.pathname, navigate])

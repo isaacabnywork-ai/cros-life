@@ -4,21 +4,32 @@ import { useModal } from '../../context/ModalContext'
 import { useModalTrap } from '../../hooks/useModalTrap'
 import { SITE_CONFIG } from '../../config/site'
 
+import { useCms } from '../../cms/context/CmsContext'
+
 export default function RegisterModal() {
   const { isOpen, closeRegisterModal, selectedPlan, setSelectedPlan } = useModal()
+  const { settings } = useCms()
   const modalRef = useModalTrap(isOpen, closeRegisterModal)
   const [copied, setCopied] = useState(false)
 
   if (!isOpen) return null
 
+  const targetAudience = settings?.event?.targetAudience || SITE_CONFIG.targetAudience
+  const eventDays = settings?.event?.days || SITE_CONFIG.days
+  const eventDates = settings?.event?.dates || SITE_CONFIG.dates
+  const logoUrl = settings?.logo_url || '/images/crosslife-logo.webp'
+
   const handleCopyCode = () => {
-    navigator.clipboard.writeText(SITE_CONFIG.pricing.coupon.code)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
+    try {
+      if (navigator?.clipboard?.writeText) {
+        navigator.clipboard.writeText(SITE_CONFIG.pricing.coupon.code).catch(() => {})
+      }
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch {}
   }
 
   const handleProceed = () => {
-    // Redirects to centralized registration gateway URL
     window.open(SITE_CONFIG.REGISTER_URL, '_blank', 'noopener,noreferrer')
   }
 
@@ -47,7 +58,7 @@ export default function RegisterModal() {
             {/* Logo and Event Identity */}
             <div className="flex items-center gap-2">
               <img
-                src="/images/crosslife-logo.webp"
+                src={logoUrl}
                 alt="CrossLife"
                 className="h-7 w-auto object-contain"
               />
@@ -56,7 +67,7 @@ export default function RegisterModal() {
               Event Info and Rates
             </h2>
             <p className="text-xs uppercase tracking-wider font-semibold text-brand-muted">
-              {SITE_CONFIG.targetAudience}
+              {targetAudience}
             </p>
           </div>
 
@@ -78,13 +89,13 @@ export default function RegisterModal() {
               <span className="text-brand-subtle block font-semibold uppercase tracking-wider text-[10px]">
                 Schedule
               </span>
-              <span className="font-bold text-brand-navy">{SITE_CONFIG.days}</span>
+              <span className="font-bold text-brand-navy">{eventDays}</span>
             </div>
             <div>
               <span className="text-brand-subtle block font-semibold uppercase tracking-wider text-[10px]">
                 Event Dates
               </span>
-              <span className="font-bold text-brand-navy">{SITE_CONFIG.dates}</span>
+              <span className="font-bold text-brand-navy">{eventDates}</span>
             </div>
           </div>
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { X, Save, Eye, Calendar, Smartphone, Tablet, Monitor } from 'lucide-react'
 import { CmsInput, CmsSelect, CmsToggle, CmsButton } from '../ui/CmsFormControls'
 import { CmsRepeater } from '../ui/CmsRepeater'
@@ -7,6 +7,16 @@ import { CmsLinkField } from '../ui/CmsLinkField'
 import { useCms } from '../../context/CmsContext'
 
 export function SectionEditorModal({ section, isOpen, onClose, onSave }) {
+  // Escape key handler
+  useEffect(() => {
+    if (!isOpen) return
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') onClose()
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [isOpen, onClose])
+
   if (!isOpen || !section) return null
 
   const { reusableBlocks } = useCms()
@@ -45,7 +55,12 @@ export function SectionEditorModal({ section, isOpen, onClose, onSave }) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose()
+      }}
+    >
       <div className="bg-white rounded-panel shadow-panel border border-slate-200 w-full max-w-4xl h-[90vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
         {/* Modal Header */}
         <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">

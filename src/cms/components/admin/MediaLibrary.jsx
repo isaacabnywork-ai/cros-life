@@ -37,31 +37,55 @@ export function MediaLibrary() {
     const file = e.target.files?.[0]
     if (!file) return
 
+    // 1.5MB validation to prevent localStorage QuotaExceededError
+    const MAX_SIZE = 1.5 * 1024 * 1024
+    if (file.size > MAX_SIZE) {
+      alert(
+        `File "${file.name}" (${(file.size / (1024 * 1024)).toFixed(1)}MB) exceeds the 1.5MB limit for browser storage. Please upload an optimized file under 1.5MB.`
+      )
+      e.target.value = ''
+      return
+    }
+
     setIsUploading(true)
     const reader = new FileReader()
-    reader.onload = async () => {
-      const newMedia = {
-        id: `media-${Date.now()}`,
-        filename: file.name,
-        url: reader.result,
-        type: file.type,
-        size: file.size,
-        alt_text: file.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' '),
-        caption: '',
-        description: '',
-        created_at: new Date().toISOString(),
-      }
-      await saveMediaItem(newMedia)
-      setSelectedItem(newMedia)
+    reader.onerror = () => {
+      alert('Failed to read media file.')
       setIsUploading(false)
+    }
+    reader.onload = async () => {
+      try {
+        const newMedia = {
+          id: `media-${Date.now()}`,
+          filename: file.name,
+          url: reader.result,
+          type: file.type || 'image/jpeg',
+          size: file.size,
+          alt_text: file.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' '),
+          caption: '',
+          description: '',
+          created_at: new Date().toISOString(),
+        }
+        await saveMediaItem(newMedia)
+        setSelectedItem(newMedia)
+      } catch (err) {
+        alert('Could not save media: ' + (err?.message || 'Storage full'))
+      } finally {
+        setIsUploading(false)
+        e.target.value = ''
+      }
     }
     reader.readAsDataURL(file)
   }
 
   const handleCopy = (url) => {
-    navigator.clipboard.writeText(url)
-    setCopiedUrl(true)
-    setTimeout(() => setCopiedUrl(false), 2000)
+    try {
+      if (navigator?.clipboard?.writeText) {
+        navigator.clipboard.writeText(url).catch(() => {})
+      }
+      setCopiedUrl(true)
+      setTimeout(() => setCopiedUrl(false), 2000)
+    } catch {}
   }
 
   const handleDelete = async (id) => {

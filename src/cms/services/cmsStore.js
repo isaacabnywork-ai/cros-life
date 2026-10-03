@@ -85,6 +85,9 @@ export function getSettings() {
 }
 
 export async function saveSettings(newSettings, user = null) {
+  if (user && user.role !== 'super_admin' && user.role !== 'admin') {
+    throw new Error('Unauthorized: Only administrators can update global settings.')
+  }
   const current = getSettings()
   // Save revision
   createRevision('settings', 'default', current, user?.name || 'Admin', 'Updated Global Settings')
@@ -221,6 +224,9 @@ export async function restorePage(id, user = null) {
 }
 
 export async function deletePagePermanently(id, user = null) {
+  if (user && user.role !== 'super_admin') {
+    throw new Error('Unauthorized: Only super administrators can permanently delete pages.')
+  }
   const pages = readStorage('pages', INITIAL_PAGES)
   const page = pages.find((p) => p.id === id)
   const title = page?.title || id
@@ -618,6 +624,9 @@ export function getUsers() {
 }
 
 export async function saveUser(userData, actor = null) {
+  if (actor && actor.role !== 'super_admin') {
+    throw new Error('Unauthorized: Only super administrators can create or edit user accounts.')
+  }
   const users = getUsers()
   const id = userData.id || `user-${Date.now()}`
   const toSave = { ...userData, id, created_at: userData.created_at || new Date().toISOString() }
@@ -631,6 +640,9 @@ export async function saveUser(userData, actor = null) {
 }
 
 export async function deleteUser(id, actor = null) {
+  if (actor && actor.role !== 'super_admin') {
+    throw new Error('Unauthorized: Only super administrators can delete user accounts.')
+  }
   const users = getUsers()
   const target = users.find((u) => u.id === id)
   writeStorage(

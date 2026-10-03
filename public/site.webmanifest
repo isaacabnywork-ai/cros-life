@@ -1,0 +1,21 @@
+{
+  "name": "CrossLife - One Life Conference",
+  "short_name": "CrossLife",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0B2545",
+  "theme_color": "#0B2545",
+  "description": "CrossLife is a Gospel-centred conference for young people organised by Equip Indian Churches.",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/images/crosslife-logo.webp",
+      "sizes": "512x512",
+      "type": "image/webp"
+    }
+  ]
+}

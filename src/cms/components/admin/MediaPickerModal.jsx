@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useCms } from '../../context/CmsContext'
 import { X, Search, Upload, Check, Image as ImageIcon, FileText, Video } from 'lucide-react'
 
@@ -8,6 +8,16 @@ export function MediaPickerModal({ isOpen, onClose, onSelect, currentUrl = '' })
   const [selectedItem, setSelectedItem] = useState(null)
   const [filterType, setFilterType] = useState('all')
   const [isUploading, setIsUploading] = useState(false)
+
+  // Escape key handler
+  useEffect(() => {
+    if (!isOpen) return
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') onClose()
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [isOpen, onClose])
 
   if (!isOpen) return null
 
@@ -27,23 +37,40 @@ export function MediaPickerModal({ isOpen, onClose, onSelect, currentUrl = '' })
     const file = e.target.files?.[0]
     if (!file) return
 
+    const MAX_SIZE = 1.5 * 1024 * 1024
+    if (file.size > MAX_SIZE) {
+      alert(`File "${file.name}" exceeds the 1.5MB limit for browser storage. Please upload an image under 1.5MB.`)
+      e.target.value = ''
+      return
+    }
+
     setIsUploading(true)
     const reader = new FileReader()
-    reader.onload = async () => {
-      const newMedia = {
-        id: `media-${Date.now()}`,
-        filename: file.name,
-        url: reader.result,
-        type: file.type,
-        size: file.size,
-        alt_text: file.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' '),
-        caption: '',
-        description: '',
-        created_at: new Date().toISOString(),
-      }
-      await saveMediaItem(newMedia)
-      setSelectedItem(newMedia)
+    reader.onerror = () => {
+      alert('Failed to read media file.')
       setIsUploading(false)
+    }
+    reader.onload = async () => {
+      try {
+        const newMedia = {
+          id: `media-${Date.now()}`,
+          filename: file.name,
+          url: reader.result,
+          type: file.type || 'image/jpeg',
+          size: file.size,
+          alt_text: file.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' '),
+          caption: '',
+          description: '',
+          created_at: new Date().toISOString(),
+        }
+        await saveMediaItem(newMedia)
+        setSelectedItem(newMedia)
+      } catch (err) {
+        alert('Could not save media: ' + (err?.message || 'Storage full'))
+      } finally {
+        setIsUploading(false)
+        e.target.value = ''
+      }
     }
     reader.readAsDataURL(file)
   }
@@ -56,7 +83,12 @@ export function MediaPickerModal({ isOpen, onClose, onSelect, currentUrl = '' })
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose()
+      }}
+    >
       <div className="bg-white rounded-panel shadow-panel border border-slate-200 w-full max-w-4xl h-[85vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
         {/* Modal Header */}
         <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">

@@ -20,6 +20,8 @@ import {
   ExternalLink,
 } from 'lucide-react'
 
+import { useCmsAuth } from '../../context/CmsAuthContext'
+
 const NAV_GROUPS = [
   {
     title: 'OVERVIEW',
@@ -39,24 +41,24 @@ const NAV_GROUPS = [
   {
     title: 'NAVIGATION',
     items: [
-      { label: 'Header Settings', to: '/admin/header', icon: LayoutTemplate },
-      { label: 'Menu Builder', to: '/admin/menus', icon: Menu },
-      { label: 'Mega Menus', to: '/admin/mega-menus', icon: LayoutGrid },
-      { label: 'Footer Settings', to: '/admin/footer', icon: Footprints },
+      { label: 'Header Settings', to: '/admin/header', icon: LayoutTemplate, minRole: 'admin' },
+      { label: 'Menu Builder', to: '/admin/menus', icon: Menu, minRole: 'admin' },
+      { label: 'Mega Menus', to: '/admin/mega-menus', icon: LayoutGrid, minRole: 'admin' },
+      { label: 'Footer Settings', to: '/admin/footer', icon: Footprints, minRole: 'admin' },
     ],
   },
   {
     title: 'WEBSITE',
     items: [
-      { label: 'Global Settings', to: '/admin/settings', icon: Settings },
-      { label: 'SEO Defaults', to: '/admin/seo', icon: Globe },
-      { label: 'Redirects', to: '/admin/redirects', icon: GitFork },
+      { label: 'Global Settings', to: '/admin/settings', icon: Settings, minRole: 'admin' },
+      { label: 'SEO Defaults', to: '/admin/seo', icon: Globe, minRole: 'admin' },
+      { label: 'Redirects', to: '/admin/redirects', icon: GitFork, minRole: 'admin' },
     ],
   },
   {
     title: 'SYSTEM',
     items: [
-      { label: 'Users & Roles', to: '/admin/users', icon: Users },
+      { label: 'Users & Roles', to: '/admin/users', icon: Users, minRole: 'super_admin' },
       { label: 'Activity Log', to: '/admin/activity', icon: Activity },
       { label: 'Trash', to: '/admin/trash', icon: Trash2 },
     ],
@@ -64,6 +66,14 @@ const NAV_GROUPS = [
 ]
 
 export function AdminSidebar({ mobileOpen = false, onCloseMobile }) {
+  const { isSuperAdmin, isAdmin } = useCmsAuth()
+
+  const canViewItem = (item) => {
+    if (item.minRole === 'super_admin') return isSuperAdmin
+    if (item.minRole === 'admin') return isAdmin
+    return true
+  }
+
   return (
     <>
       {/* Mobile Backdrop */}
@@ -107,36 +117,41 @@ export function AdminSidebar({ mobileOpen = false, onCloseMobile }) {
 
         {/* Navigation Sections */}
         <div className="flex-1 overflow-y-auto px-3 py-4 space-y-6">
-          {NAV_GROUPS.map((group) => (
-            <div key={group.title} className="space-y-1">
-              <span className="px-3 text-[10px] font-bold uppercase tracking-widest text-slate-500 font-mono">
-                {group.title}
-              </span>
-              <div className="space-y-0.5 pt-1">
-                {group.items.map((item) => {
-                  const Icon = item.icon
-                  return (
-                    <NavLink
-                      key={item.to}
-                      to={item.to}
-                      end={item.exact}
-                      onClick={onCloseMobile}
-                      className={({ isActive }) =>
-                        `flex items-center gap-2.5 px-3 py-2 rounded-md text-xs font-semibold transition-colors ${
-                          isActive
-                            ? 'bg-brand-blue text-white shadow-xs'
-                            : 'text-slate-400 hover:text-slate-100 hover:bg-slate-800/60'
-                        }`
-                      }
-                    >
-                      <Icon className="w-4 h-4 shrink-0" />
-                      <span>{item.label}</span>
-                    </NavLink>
-                  )
-                })}
+          {NAV_GROUPS.map((group) => {
+            const visibleItems = group.items.filter(canViewItem)
+            if (visibleItems.length === 0) return null
+
+            return (
+              <div key={group.title} className="space-y-1">
+                <span className="px-3 text-[10px] font-bold uppercase tracking-widest text-slate-500 font-mono">
+                  {group.title}
+                </span>
+                <div className="space-y-0.5 pt-1">
+                  {visibleItems.map((item) => {
+                    const Icon = item.icon
+                    return (
+                      <NavLink
+                        key={item.to}
+                        to={item.to}
+                        end={item.exact}
+                        onClick={onCloseMobile}
+                        className={({ isActive }) =>
+                          `flex items-center gap-2.5 px-3 py-2 rounded-md text-xs font-semibold transition-colors ${
+                            isActive
+                              ? 'bg-brand-blue text-white shadow-xs'
+                              : 'text-slate-400 hover:text-slate-100 hover:bg-slate-800/60'
+                          }`
+                        }
+                      >
+                        <Icon className="w-4 h-4 shrink-0" />
+                        <span>{item.label}</span>
+                      </NavLink>
+                    )
+                  })}
+                </div>
               </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
 
         {/* Footer info & Live Link */}

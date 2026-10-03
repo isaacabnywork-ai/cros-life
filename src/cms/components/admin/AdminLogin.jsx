@@ -18,9 +18,15 @@ export function AdminLogin() {
     }
   }
 
-  const handleQuickLogin = (roleEmail) => {
+  const handleQuickLogin = async (roleEmail) => {
     setEmail(roleEmail)
-    login(roleEmail, 'password')
+    setPassword('password')
+    setError('')
+    try {
+      await login(roleEmail, 'password')
+    } catch (err) {
+      setError(err?.message || 'Login failed')
+    }
   }
 
   return (

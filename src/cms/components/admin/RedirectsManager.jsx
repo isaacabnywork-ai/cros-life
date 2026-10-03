@@ -15,10 +15,13 @@ export function RedirectsManager() {
     e.preventDefault()
     if (!sourceUrl.trim() || !targetUrl.trim()) return
 
+    const normalizedSource = sourceUrl.trim().startsWith('/') ? sourceUrl.trim() : '/' + sourceUrl.trim()
+    const cleanTarget = targetUrl.trim()
+
     await saveRedirect({
       id: `redir-${Date.now()}`,
-      source_url: sourceUrl.trim(),
-      target_url: targetUrl.trim(),
+      source_url: normalizedSource,
+      target_url: cleanTarget,
       status_code: Number(statusCode),
       enabled: true,
     })

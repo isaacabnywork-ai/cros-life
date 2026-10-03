@@ -17,6 +17,7 @@ import RichTextSection from './RichTextSection'
 import CardsSection from './CardsSection'
 import CustomContentSection from './CustomContentSection'
 import ReusableBlockSection from './ReusableBlockSection'
+import ErrorBoundary from '../../../components/ui/ErrorBoundary'
 
 // Section Component Registry
 const SECTION_REGISTRY = {
@@ -105,7 +106,15 @@ export default function SectionRenderer({ section, isPreview = false }) {
       data-section-type={section.type}
       className={visibilityClass}
     >
-      <Component data={section.data || {}} />
+      <ErrorBoundary
+        fallback={
+          <div className="p-4 bg-slate-50 border border-slate-200 text-slate-500 text-xs text-center my-2 rounded max-w-7xl mx-auto">
+            Content temporarily unavailable.
+          </div>
+        }
+      >
+        <Component data={section.data || {}} />
+      </ErrorBoundary>
     </div>
   )
 }

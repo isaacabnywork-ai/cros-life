@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 import { Phone, Mail, MapPin, ArrowUpRight } from 'lucide-react'
 import { useCms } from '../../cms/context/CmsContext'
 
+import UniversalLink from '../ui/UniversalLink'
+
 export default function Footer() {
   const currentYear = new Date().getFullYear()
   const { settings, menus } = useCms()
@@ -76,12 +78,12 @@ export default function Footer() {
             <ul className="space-y-2.5 text-sm">
               {navLinks.map((link) => (
                 <li key={link.label}>
-                  <Link
+                  <UniversalLink
                     to={link.href}
                     className="text-slate-300 hover:text-white transition-colors"
                   >
                     {link.label}
-                  </Link>
+                  </UniversalLink>
                 </li>
               ))}
             </ul>

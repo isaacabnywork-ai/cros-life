@@ -35,9 +35,13 @@ export default function PricingSection({ data = {} }) {
 
   const handleCopyCoupon = () => {
     if (earlyBird.coupon?.code) {
-      navigator.clipboard.writeText(earlyBird.coupon.code)
-      setCouponCopied(true)
-      setTimeout(() => setCouponCopied(false), 2000)
+      try {
+        if (navigator?.clipboard?.writeText) {
+          navigator.clipboard.writeText(earlyBird.coupon.code).catch(() => {})
+        }
+        setCouponCopied(true)
+        setTimeout(() => setCouponCopied(false), 2000)
+      } catch {}
     }
   }
 
