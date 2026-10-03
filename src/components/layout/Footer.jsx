@@ -1,11 +1,24 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { Phone, Mail, MapPin, ArrowUpRight } from 'lucide-react'
-import { SITE_CONFIG } from '../../config/site'
-import { FOOTER_LINKS } from '../../data/navigation'
+import { useCms } from '../../cms/context/CmsContext'
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
+  const { settings, menus } = useCms()
+
+  const footerMenu = menus.find((m) => m.slug === 'footer')
+  const navLinks = footerMenu?.items || []
+
+  const organiser = settings.event?.organiser || 'Equip Indian Churches'
+  const venue = settings.contacts?.venue || {
+    name: 'Ashirwad Global Learning Centre',
+    city: 'Hyderabad',
+    state: 'Telangana',
+  }
+  const phones = settings.contacts?.phones || []
+  const email = settings.contacts?.email || 'contact@crosslife.in'
+  const dates = settings.event?.dates || '14 - 16 September 2027'
 
   return (
     <footer className="bg-brand-navy text-slate-300 border-t border-brand-border-navy relative overflow-hidden">
@@ -27,15 +40,15 @@ export default function Footer() {
           <div className="lg:col-span-5 space-y-6">
             <Link to="/" className="inline-flex items-center">
               <img
-                src="/images/crosslife-logo.webp"
-                alt="CrossLife"
+                src={settings.logo_url || '/images/crosslife-logo.webp'}
+                alt={settings.site_name || 'CrossLife'}
                 className="h-10 sm:h-11 w-auto object-contain"
               />
             </Link>
 
             <p className="text-sm text-slate-300 max-w-sm leading-relaxed">
-              One Life for Christ, One Desire to glorify Him, One Purpose to proclaim His Gospel.
-              A Gospel-centred youth conference for young men and women.
+              {settings.footer_description ||
+                'One Life for Christ, One Desire to glorify Him, One Purpose to proclaim His Gospel. A Gospel-centred youth conference for young men and women.'}
             </p>
 
             <div className="pt-2">
@@ -46,8 +59,11 @@ export default function Footer() {
                 to="/organiser"
                 className="inline-flex items-center gap-1.5 text-sm font-semibold text-white hover:text-brand-amber transition-colors group"
               >
-                <span>{SITE_CONFIG.organiser}</span>
-                <ArrowUpRight className="w-4 h-4 text-slate-400 group-hover:text-brand-amber transition-colors" strokeWidth={1.5} />
+                <span>{organiser}</span>
+                <ArrowUpRight
+                  className="w-4 h-4 text-slate-400 group-hover:text-brand-amber transition-colors"
+                  strokeWidth={1.5}
+                />
               </Link>
             </div>
           </div>
@@ -58,7 +74,7 @@ export default function Footer() {
               Navigation
             </h3>
             <ul className="space-y-2.5 text-sm">
-              {FOOTER_LINKS.navigation.map((link) => (
+              {navLinks.map((link) => (
                 <li key={link.label}>
                   <Link
                     to={link.href}
@@ -80,25 +96,27 @@ export default function Footer() {
               <div className="flex items-start gap-3">
                 <MapPin className="w-4 h-4 text-brand-amber shrink-0 mt-1" strokeWidth={1.75} />
                 <div>
-                  <p className="font-medium text-white">{SITE_CONFIG.venue.name}</p>
-                  <p className="text-xs text-slate-400">{SITE_CONFIG.venue.city}, {SITE_CONFIG.venue.state}</p>
+                  <p className="font-medium text-white">{venue.name}</p>
+                  <p className="text-xs text-slate-400">
+                    {venue.city}, {venue.state}
+                  </p>
                 </div>
               </div>
 
               <div className="flex items-center gap-3">
                 <Mail className="w-4 h-4 text-brand-amber shrink-0" strokeWidth={1.75} />
                 <a
-                  href={`mailto:${SITE_CONFIG.contacts.email}`}
+                  href={`mailto:${email}`}
                   className="text-slate-300 hover:text-white transition-colors text-xs sm:text-sm"
                 >
-                  {SITE_CONFIG.contacts.email}
+                  {email}
                 </a>
               </div>
 
               <div className="flex items-start gap-3">
                 <Phone className="w-4 h-4 text-brand-amber shrink-0 mt-1" strokeWidth={1.75} />
                 <div className="space-y-1">
-                  {SITE_CONFIG.contacts.phones.map((phone) => (
+                  {phones.map((phone) => (
                     <a
                       key={phone.value}
                       href={`tel:${phone.value}`}
@@ -113,7 +131,7 @@ export default function Footer() {
 
             <div className="mt-6 pt-4 border-t border-brand-border-navy/60">
               <div className="inline-block px-3 py-1.5 rounded bg-brand-navy-deep border border-brand-border-navy text-xs text-slate-300 font-mono">
-                {SITE_CONFIG.dates}
+                {dates}
               </div>
             </div>
           </div>
@@ -122,7 +140,7 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 gap-4">
           <p>
-            &copy; {currentYear} {SITE_CONFIG.name}. All rights reserved. Organised by {SITE_CONFIG.organiser}.
+            &copy; {currentYear} {settings.site_name}. {settings.copyright_text}
           </p>
           <div className="flex items-center space-x-6">
             <Link to="/statement-of-faith" className="hover:text-slate-200 transition-colors">
