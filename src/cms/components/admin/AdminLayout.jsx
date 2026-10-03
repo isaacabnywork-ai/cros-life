@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
+import { useCmsAuth } from '../../context/CmsAuthContext'
 import { AdminSidebar } from './AdminSidebar'
 import { AdminHeader } from './AdminHeader'
 import { DashboardHome } from './DashboardHome'
